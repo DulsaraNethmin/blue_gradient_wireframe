@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "618310820310",
+    "firebase_url": "https://aqua-scanner-4ab1e-default-rtdb.firebaseio.com",
+    "project_id": "aqua-scanner-4ab1e",
+    "storage_bucket": "aqua-scanner-4ab1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618310820310:android:990343682337ffc2ae4477",
+        "android_client_info": {
+          "package_name": "com.aquascanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618310820310-homqmsjelcj47l540sq17u3o5hpsn4vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbDJqJXPMowk5L4vsISng5k4Lz8Vnk5Gw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618310820310-homqmsjelcj47l540sq17u3o5hpsn4vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618310820310:android:eb29e9cb7f26fdd9ae4477",
+        "android_client_info": {
+          "package_name": "com.example.bluegradientwireframe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618310820310-homqmsjelcj47l540sq17u3o5hpsn4vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbDJqJXPMowk5L4vsISng5k4Lz8Vnk5Gw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618310820310-homqmsjelcj47l540sq17u3o5hpsn4vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
