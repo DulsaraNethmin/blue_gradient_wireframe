@@ -1,6 +1,7 @@
 import 'package:blue_gradient_wireframe/AllPages/home_page.dart';
 import 'package:blue_gradient_wireframe/AllPages/password_reset_page.dart';
 import 'package:blue_gradient_wireframe/AllPages/signup_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,23 +46,24 @@ class _LoginPageState extends State<LoginPage> {
             .user;
 
         if (firebaseUser != null) {
+          //FirebaseFirestore.instance
           DatabaseReference driverRef =
               FirebaseDatabase.instance.ref().child("users");
-
-          driverRef.child(firebaseUser.uid).once().then((driverKey) {
-            final snap = driverKey.snapshot;
-            if (snap.value != null) {
-              Fluttertoast.showToast(msg: "Login successful");
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (c) => HomePage(),
-                ),
-              );
-            } else {
-              Fluttertoast.showToast(msg: "No record exist with this email.");
-            }
-          });
+          var current_user = FirebaseAuth.instance.currentUser;
+          //driverRef.child(firebaseUser.uid).once().then((driverKey) {
+          //final snap = driverKey.snapshot;
+          if (current_user != null) {
+            Fluttertoast.showToast(msg: "Login successful");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (c) => HomePage(),
+              ),
+            );
+          } else {
+            Fluttertoast.showToast(msg: "No record exist with this email.");
+          }
+          //});
         } else {
           //Navigator.pop(context);
           Navigator.push(
