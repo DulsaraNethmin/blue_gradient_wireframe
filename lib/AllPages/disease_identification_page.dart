@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+import 'package:path_provider/path_provider.dart';
+
 class DiseaseIdentificationPage extends StatefulWidget {
   const DiseaseIdentificationPage({Key? key}) : super(key: key);
 
@@ -22,10 +24,23 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-    //final newImage = File('${(await getTemporaryDirectory()).path}/your_name.jpg');
+    print('cam2');
     setState(() {
       image = img;
     });
+  }
+
+  Future selectImageFromcamera(BuildContext context) async {
+    try {
+      XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) return;
+      final temp_img = XFile(image.path);
+      setState(() {
+        this.image = temp_img;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   final firebase_storage.FirebaseStorage storage =
@@ -338,21 +353,28 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                       //if user click this button. user can upload image from camera
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        getImage(ImageSource.camera);
+                                        selectImageFromcamera(context);
+                                        //getImage(ImageSource.camera);
                                         //final newImage = File('${(await getTemporaryDirectory()).path}/your_name.jpg');
                                         if (image != null) {
+                                          print('cam');
                                           String name = image!.name;
                                           String path = image!.path;
-                                          //print(path);
-                                          ///File(path).renameSync(path.substring(0))
                                           String download_url =
-                                              await uploadImage(
-                                                  "fish_image", path);
+                                              await uploadImage(name, path);
+
                                           setState(() {
                                             url = download_url;
                                           });
+                                          try {
+                                            await deleteImage();
+                                          } catch (e) {
+                                            print(e);
+                                          }
                                           await setDatabase(name);
+                                          // await deleteImage();
                                           print(url);
+                                          await getResult();
                                         }
                                       },
                                       child: Row(
