@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home_page.dart';
+
 class FishtankMonitoring extends StatefulWidget {
   const FishtankMonitoring({Key? key}) : super(key: key);
 
@@ -10,19 +12,30 @@ class FishtankMonitoring extends StatefulWidget {
 }
 
 class _FishtankMonitoringState extends State<FishtankMonitoring> {
+  Future<void> _launchInBrowser(String url1) async {
+    final Uri _url = Uri(scheme: "http", host: url1);
+    if (!await launchUrl(
+      _url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $_url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
-            image: DecorationImage(image: AssetImage("lib/img/6520176.jpg"),fit: BoxFit.cover)
-        ),
+            image: DecorationImage(
+                image: AssetImage("lib/img/6520176.jpg"), fit: BoxFit.cover)),
         child: SingleChildScrollView(
           child: Column(
-            children:  [
-
-              const SizedBox(height: 75.0,),
+            children: [
+              const SizedBox(
+                height: 75.0,
+              ),
               Container(
                 width: 290.0,
                 height: 130.0,
@@ -44,28 +57,35 @@ class _FishtankMonitoringState extends State<FishtankMonitoring> {
                   ),
                 ),
               ),
-
-              const SizedBox(height: 510.0,),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+              ElevatedButton(
+                  onPressed: () async {
+                    await _launchInBrowser("www.google.com");
+                  },
+                  child: Text("Go")),
+              const SizedBox(
+                height: 510.0,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end,
                   //mainAxisAlignment = MainAxisAlignment.start,
-                  children:   [
+                  children: [
                     IconButton(
                       visualDensity: VisualDensity.standard,
                       iconSize: 25.0,
-                      icon: const Icon(Icons.home,color: CupertinoColors.black,size: 40.0,),
+                      icon: const Icon(
+                        Icons.home,
+                        color: CupertinoColors.black,
+                        size: 40.0,
+                      ),
                       tooltip: 'Increase volume by 10',
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()),
                         );
                       },
                     ),
-                  ]
-              )
-
-
+                  ])
             ],
           ),
         ),

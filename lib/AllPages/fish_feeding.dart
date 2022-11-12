@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,17 +20,17 @@ var current_user = FirebaseAuth.instance.currentUser;
 class _FishFeedingState extends State<FishFeeding> {
   //var current_user = FirebaseAuth.instance.currentUser;
 
-  void updateFishFeed() async {
+  Future updateFishFeed() async {
     Map<String, dynamic> data = {
       "user": current_user!.uid,
       "count": val,
-      "toggle_state": positive
+      "check_feeder_state": positive
     };
     print(positive);
     print(val);
     await FirebaseFirestore.instance
         .collection('fishfeed')
-        .doc(current_user!.uid)
+        .doc("testuser")
         .set(data);
   }
 
@@ -67,7 +69,7 @@ class _FishFeedingState extends State<FishFeeding> {
                           val = 0;
                         }
                       });
-                      updateFishFeed();
+                      //updateFishFeed();
                     },
                     icon: Icon(Icons.horizontal_rule),
                     color: Color.fromARGB(255, 5, 5, 5),
@@ -91,7 +93,7 @@ class _FishFeedingState extends State<FishFeeding> {
                           val = 99;
                         }
                       });
-                      updateFishFeed();
+                      //updateFishFeed();
                     },
                     icon: Icon(Icons.add),
                     color: Color.fromARGB(255, 5, 5, 5),
@@ -102,44 +104,27 @@ class _FishFeedingState extends State<FishFeeding> {
               SizedBox(
                 height: 20,
               ),
-              AnimatedToggleSwitch<bool>.dual(
-                current: positive,
-                first: false,
-                second: true,
-                dif: 50.0,
-                borderColor: Colors.transparent,
-                borderWidth: 5.0,
-                height: 55,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(0, 1.5),
-                  ),
-                ],
-                onChanged: (b) {
-                  setState(() => positive = b);
+              ElevatedButton(
+                child: Text("Apply"),
+                onPressed: () {
+                  //setState(() => positive = b);
                   updateFishFeed();
                 },
-                colorBuilder: (b) => b ? Colors.red : Colors.green,
-                textBuilder: (value) => value
-                    ? const Center(
-                        child: Text(
-                        'Off',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: CupertinoColors.black,
-                            fontWeight: FontWeight.bold),
-                      ))
-                    : const Center(
-                        child: Text(
-                        'On',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: CupertinoColors.black,
-                            fontWeight: FontWeight.bold),
-                      )),
+              ),
+              SizedBox(
+                height: 60,
+              ),
+              ElevatedButton(
+                child: Text("Check Feeder"),
+                onPressed: () async {
+                  setState(() => positive = true);
+                  await updateFishFeed();
+                  await Timer(Duration(seconds: 3), () {
+                    setState(() => positive = false);
+                    print('hi');
+                    updateFishFeed();
+                  });
+                },
               ),
               const SizedBox(
                 height: 340.0,
