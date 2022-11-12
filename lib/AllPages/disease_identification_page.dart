@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
-import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class DiseaseIdentificationPage extends StatefulWidget {
   const DiseaseIdentificationPage({Key? key}) : super(key: key);
@@ -21,27 +20,38 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
 
   final ImagePicker picker = ImagePicker();
 
+  File changeFileNameOnlySync(File file, String newFileName) {
+    var path = file.path;
+    var lastSeparator = path.lastIndexOf(Platform.pathSeparator);
+    var newPath = path.substring(0, lastSeparator + 1) + newFileName;
+    return file.renameSync(newPath);
+  }
+
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-    print('cam2');
+    File img2 = File(img!.path);
+    String type = img.name.substring(img.name.indexOf("."), img.name.length);
+    print(type);
+    File img3 = changeFileNameOnlySync(img2, 'testimage${type}');
+    XFile img4 = XFile(img3.path);
     setState(() {
-      image = img;
+      image = img4;
     });
   }
 
-  Future selectImageFromcamera(BuildContext context) async {
-    try {
-      XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
-      final temp_img = XFile(image.path);
-      setState(() {
-        this.image = temp_img;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  // Future selectImageFromcamera(BuildContext context) async {
+  //   try {
+  //     XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+  //     if (image == null) return;
+  //     final temp_img = XFile(image.path);
+  //     setState(() {
+  //       this.image = temp_img;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -89,8 +99,9 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
         .doc("image1")
         .get();
     String name = data.data()!["name"];
+    String type = name.substring(name.indexOf("."), name.length);
     print(name);
-    storage.ref("fish/${name}").delete();
+    storage.ref("fish/testimage${type}").delete();
   }
 
   String getDiseases(String n) {
@@ -331,11 +342,11 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                           setState(() {
                                             url = download_url;
                                           });
-                                          try {
-                                            await deleteImage();
-                                          } catch (e) {
-                                            print(e);
-                                          }
+                                          // try {
+                                          //   await deleteImage();
+                                          // } catch (e) {
+                                          //   print(e);
+                                          // }
                                           await setDatabase(name);
                                           // await deleteImage();
                                           print(url);
@@ -353,8 +364,8 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                       //if user click this button. user can upload image from camera
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        selectImageFromcamera(context);
-                                        //getImage(ImageSource.camera);
+                                        //selectImageFromcamera(context);
+                                        getImage(ImageSource.camera);
                                         //final newImage = File('${(await getTemporaryDirectory()).path}/your_name.jpg');
                                         if (image != null) {
                                           print('cam');
