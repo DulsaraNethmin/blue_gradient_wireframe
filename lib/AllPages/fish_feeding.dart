@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
@@ -19,19 +20,17 @@ var current_user = FirebaseAuth.instance.currentUser;
 
 class _FishFeedingState extends State<FishFeeding> {
   //var current_user = FirebaseAuth.instance.currentUser;
-
+  DatabaseReference dataRef =
+      FirebaseDatabase.instance.ref("users/000001/fishfeed");
   Future updateFishFeed() async {
-    Map<String, dynamic> data = {
-      "user": current_user!.uid,
-      "count": val,
-      "check_feeder_state": positive
-    };
+    Map<String, dynamic> data = {"count": val, "check_feeder_state": positive};
     print(positive);
     print(val);
-    await FirebaseFirestore.instance
-        .collection('fishfeed')
-        .doc("testuser")
-        .set(data);
+    // await FirebaseFirestore.instance
+    //     .collection('fishfeed')
+    //     .doc("testuser")
+    //     .set(data);
+    await dataRef.set(data);
   }
 
   @override

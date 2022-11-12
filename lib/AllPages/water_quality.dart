@@ -18,12 +18,23 @@ class WaterQuality extends StatefulWidget {
 
 class _WaterQualityState extends State<WaterQuality> {
   var current_user = FirebaseAuth.instance.currentUser;
-  //DatabaseReference userRef = FirebaseDatabase.instance.ref().child("users");
+  DatabaseReference dataRef =
+      FirebaseDatabase.instance.ref("users/000001/Water_Quality");
   CollectionReference usersRef =
       FirebaseFirestore.instance.collection('waterquality');
 
   Future<dynamic> getUser() async {
+    //return await dataRef.get();
     return await usersRef.doc(current_user!.uid).get();
+  }
+
+  String PH_Value = "0";
+  String TBS_State = "0";
+  String TDS_Value = "0";
+
+  Future<dynamic> getValues() async {
+    //print(dataRef.get());
+    return await dataRef.get();
   }
 
   //userRef.child(firebaseUser.uid).set(userMap);
@@ -40,14 +51,15 @@ class _WaterQualityState extends State<WaterQuality> {
                 image: AssetImage("lib/img/5565016.jpg"), fit: BoxFit.cover)),
         child: SingleChildScrollView(
           child: FutureBuilder(
-            future: getUser(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            //stream: dataRef.onValue,
+            future: getValues(),
+            builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasError) {
-                return CircularProgressIndicator.adaptive();
+                print('error');
+                return CircularProgressIndicator();
               }
               if (snapshot.hasData) {
-                //print(snapshot.data['username']);
-
+                print(snapshot.data.value);
                 return Column(
                   children: [
                     const SizedBox(
@@ -114,7 +126,9 @@ class _WaterQualityState extends State<WaterQuality> {
                         ),
                         child: Center(
                           child: Text(
-                            snapshot.data['PH value'],
+                            //"0",
+                            snapshot.data.value["PH_Value"].toString(),
+                            //PH_Value,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Arial',
@@ -170,7 +184,10 @@ class _WaterQualityState extends State<WaterQuality> {
                         ),
                         child: Center(
                           child: Text(
-                            snapshot.data['water visibility'],
+                            // "0",
+                            //snapshot.data.snapshot.value['TBS_State'],
+                            '${snapshot.data.value["TBS_State"]}',
+                            //TBS_State,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Arial',
@@ -226,7 +243,9 @@ class _WaterQualityState extends State<WaterQuality> {
                         ),
                         child: Center(
                           child: Text(
-                            snapshot.data['TDS value'],
+                            //TDS_Value,
+                            //snapshot.data['TDS_Value'],
+                            '${snapshot.data.value["TDS_Value"]}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Arial',
@@ -265,9 +284,9 @@ class _WaterQualityState extends State<WaterQuality> {
                     ])
                   ],
                 );
-              } else {
-                return CircularProgressIndicator();
               }
+              print('hi');
+              return CircularProgressIndicator();
             },
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:blue_gradient_wireframe/AllPages/fish_feeding.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -19,12 +20,18 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
   String? url;
 
   final ImagePicker picker = ImagePicker();
+  DatabaseReference dataRef =
+      FirebaseDatabase.instance.ref("users/000001/Dises");
 
   File changeFileNameOnlySync(File file, String newFileName) {
     var path = file.path;
     var lastSeparator = path.lastIndexOf(Platform.pathSeparator);
     var newPath = path.substring(0, lastSeparator + 1) + newFileName;
     return file.renameSync(newPath);
+  }
+
+  Future getVal() async {
+    dynamic data = dataRef.get();
   }
 
   //we can upload image from camera or from gallery based on parameter
@@ -85,12 +92,13 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
   }
 
   Future<dynamic> getResult() async {
-    var res = await FirebaseFirestore.instance
-        .collection("images")
-        .doc("image1")
-        .get();
-    print(res.data()!["result"]);
-    return res;
+    // var res = await FirebaseFirestore.instance
+    //     .collection("images")
+    //     .doc("image1")
+    //     .get();
+    dynamic res2 = await dataRef.get();
+    print(res2.value["Value"]);
+    return res2;
   }
 
   Future<dynamic> deleteImage() async {
@@ -225,7 +233,8 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    getDiseases(snapshot.data["result"]),
+                                    getDiseases(snapshot.data.value["Value"]
+                                        .toString()),
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -258,7 +267,8 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      getMoreInfo(snapshot.data["result"]),
+                                      getMoreInfo(snapshot.data.value["Value"]
+                                          .toString()),
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal,
@@ -292,7 +302,8 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      getTreatment(snapshot.data["result"]),
+                                      getTreatment(snapshot.data.value["Value"]
+                                          .toString()),
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal,
