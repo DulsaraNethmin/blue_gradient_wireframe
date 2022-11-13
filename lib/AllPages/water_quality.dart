@@ -28,7 +28,7 @@ class _WaterQualityState extends State<WaterQuality> {
     return await usersRef.doc(current_user!.uid).get();
   }
 
-  String PH_Value = "0";
+  dynamic PH_Value = "0";
   String TBS_State = "0";
   String TDS_Value = "0";
 
@@ -50,16 +50,17 @@ class _WaterQualityState extends State<WaterQuality> {
             image: DecorationImage(
                 image: AssetImage("lib/img/5565016.jpg"), fit: BoxFit.cover)),
         child: SingleChildScrollView(
-          child: FutureBuilder(
-            //stream: dataRef.onValue,
-            future: getValues(),
-            builder: (context, AsyncSnapshot snapshot) {
+          child: StreamBuilder(
+            stream: dataRef.onValue,
+            //future: getValues(),
+            builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
               if (snapshot.hasError) {
                 print('error');
                 return CircularProgressIndicator();
               }
               if (snapshot.hasData) {
-                print(snapshot.data.value);
+                dynamic data = snapshot.data!.snapshot.value;
+                print(snapshot.data!.snapshot.value);
                 return Column(
                   children: [
                     const SizedBox(
@@ -127,7 +128,9 @@ class _WaterQualityState extends State<WaterQuality> {
                         child: Center(
                           child: Text(
                             //"0",
-                            snapshot.data.value["PH_Value"].toString(),
+                            //(data!=null)?data["PH_Value"]:"0",
+                            data["PH_Value"].toString(),
+                            //data["PH_Value"],
                             //PH_Value,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -184,9 +187,9 @@ class _WaterQualityState extends State<WaterQuality> {
                         ),
                         child: Center(
                           child: Text(
-                            // "0",
+                            data["TBS_State"].toString(),
                             //snapshot.data.snapshot.value['TBS_State'],
-                            '${snapshot.data.value["TBS_State"]}',
+                            //'${snapshot.data.value["TBS_State"]}',
                             //TBS_State,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -243,9 +246,10 @@ class _WaterQualityState extends State<WaterQuality> {
                         ),
                         child: Center(
                           child: Text(
+                            data["TDS_Value"].toString(),
                             //TDS_Value,
                             //snapshot.data['TDS_Value'],
-                            '${snapshot.data.value["TDS_Value"]}',
+                            //'${snapshot.data.value["TDS_Value"]}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Arial',
