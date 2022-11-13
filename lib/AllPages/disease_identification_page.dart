@@ -19,6 +19,7 @@ class DiseaseIdentificationPage extends StatefulWidget {
 class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
   XFile? image;
   String? url;
+  String val = "5";
 
   final ImagePicker picker = ImagePicker();
   DatabaseReference dataRef =
@@ -47,19 +48,6 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
       image = img4;
     });
   }
-
-  // Future selectImageFromcamera(BuildContext context) async {
-  //   try {
-  //     XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
-  //     if (image == null) return;
-  //     final temp_img = XFile(image.path);
-  //     setState(() {
-  //       this.image = temp_img;
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -93,12 +81,14 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
   }
 
   Future<dynamic> getResult() async {
-    // var res = await FirebaseFirestore.instance
-    //     .collection("images")
-    //     .doc("image1")
-    //     .get();
-    dynamic res2 = await dataRef.get();
+    dynamic res2;
+    //await Timer(Duration(seconds: 10), () async {
+    res2 = await dataRef.get();
     print(res2.value["Value"]);
+    // });
+    setState(() {
+      val = res2.value["Value"].toString();
+    });
     return res2;
   }
 
@@ -173,6 +163,97 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
     return diseases;
   }
 
+  Widget setWidget() {
+    if (val != "5") {
+      return Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              // getDiseases(snapshot.data.value["Value"]
+              //     .toString()),
+              getDiseases(val),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 227, 197, 197)),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Information',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 255, 255, 255)),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                // getMoreInfo(snapshot.data.value["Value"]
+                //     .toString()),
+                getMoreInfo(val),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: Color.fromARGB(255, 227, 197, 197)),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Mediation and Treatment',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 255, 255, 255)),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                // getTreatment(snapshot.data.value["Value"]
+                //     .toString()),
+                getTreatment(val),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: Color.fromARGB(255, 227, 197, 197)),
+              ),
+            ),
+          ],
+        ),
+      ]);
+    } else {
+      return CircularProgressIndicator.adaptive();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,103 +302,20 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    FutureBuilder(
-                        future: getResult(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasError) {
-                            return CircularProgressIndicator();
-                          }
-                          if (snapshot.hasData) {
-                            return Column(children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    getDiseases(snapshot.data.value["Value"]
-                                        .toString()),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            Color.fromARGB(255, 227, 197, 197)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Information',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      getMoreInfo(snapshot.data.value["Value"]
-                                          .toString()),
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Color.fromARGB(
-                                              255, 227, 197, 197)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Mediation and Treatment',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      getTreatment(snapshot.data.value["Value"]
-                                          .toString()),
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Color.fromARGB(
-                                              255, 227, 197, 197)),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ]);
-                          }
-                          return CircularProgressIndicator();
-                        }),
+                    // FutureBuilder(
+                    //     future: getResult(),
+                    //     builder:
+                    //         (BuildContext context, AsyncSnapshot snapshot) {
+                    //       if (snapshot.hasError) {
+                    //         print("error loading...");
+                    //         return CircularProgressIndicator();
+                    //       }
+                    //       // Timer(Duration(seconds: 10), {
+                    //       //})
+                    //       if (snapshot.hasData) {
+                    //print('inside');
+                    setWidget()
+                    //}),
                   ],
                 ),
               )
@@ -362,7 +360,11 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                           await setDatabase(name);
                                           // await deleteImage();
                                           print(url);
-                                          await getResult();
+                                          await Timer(Duration(seconds: 10),
+                                              () {
+                                            print("exe");
+                                            getResult();
+                                          });
                                         }
                                       },
                                       child: Row(
@@ -397,10 +399,12 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                           await setDatabase(name);
                                           // await deleteImage();
                                           print(url);
-                                          await Timer(Duration(seconds: 3),
-                                              () async {
-                                            await getResult();
+                                          await Timer(Duration(seconds: 10),
+                                              () {
+                                            print("exe");
+                                            //getResult();
                                           });
+                                          print("111");
                                         }
                                       },
                                       child: Row(
