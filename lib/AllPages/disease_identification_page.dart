@@ -320,108 +320,120 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                 ),
               )
             else
-              ButtonTheme(
-                minWidth: 200.0,
-                height: 200.0,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              title:
-                                  const Text('Please choose media to select'),
-                              content: Container(
-                                height: MediaQuery.of(context).size.height / 6,
-                                child: Column(
-                                  children: [
-                                    ElevatedButton(
-                                      //if user click this button, user can upload image from gallery
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                        await getImage(ImageSource.gallery);
-                                        if (image != null) {
-                                          String name = image!.name;
-                                          String path = image!.path;
-                                          String download_url =
-                                              await uploadImage(name, path);
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ButtonTheme(
+                      minWidth: 400.0,
+                      height: 200.0,
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    title: const Text(
+                                        'Please choose media to select'),
+                                    content: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              6,
+                                      child: Column(
+                                        children: [
+                                          ElevatedButton(
+                                            //if user click this button, user can upload image from gallery
+                                            onPressed: () async {
+                                              Navigator.pop(context);
+                                              await getImage(
+                                                  ImageSource.gallery);
+                                              if (image != null) {
+                                                String name = image!.name;
+                                                String path = image!.path;
+                                                String download_url =
+                                                    await uploadImage(
+                                                        name, path);
 
-                                          setState(() {
-                                            url = download_url;
-                                          });
-                                          // try {
-                                          //   await deleteImage();
-                                          // } catch (e) {
-                                          //   print(e);
-                                          // }
-                                          await setDatabase(name);
-                                          // await deleteImage();
-                                          print(url);
-                                          await Timer(Duration(seconds: 10),
-                                              () {
-                                            print("exe");
-                                            getResult();
-                                          });
-                                        }
-                                      },
-                                      child: Row(
-                                        children: const [
-                                          Icon(Icons.image),
-                                          Text('From Gallery'),
+                                                setState(() {
+                                                  url = download_url;
+                                                });
+                                                // try {
+                                                //   await deleteImage();
+                                                // } catch (e) {
+                                                //   print(e);
+                                                // }
+                                                await setDatabase(name);
+                                                // await deleteImage();
+                                                print(url);
+                                                await Timer(
+                                                    Duration(seconds: 10), () {
+                                                  print("exe");
+                                                  getResult();
+                                                });
+                                              }
+                                            },
+                                            child: Row(
+                                              children: const [
+                                                Icon(Icons.image),
+                                                Text('From Gallery'),
+                                              ],
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            //if user click this button. user can upload image from camera
+                                            onPressed: () async {
+                                              Navigator.pop(context);
+                                              //selectImageFromcamera(context);
+                                              getImage(ImageSource.camera);
+                                              //final newImage = File('${(await getTemporaryDirectory()).path}/your_name.jpg');
+                                              if (image != null) {
+                                                print('cam');
+                                                String name = image!.name;
+                                                String path = image!.path;
+                                                String download_url =
+                                                    await uploadImage(
+                                                        name, path);
+
+                                                setState(() {
+                                                  url = download_url;
+                                                });
+                                                try {
+                                                  await deleteImage();
+                                                } catch (e) {
+                                                  print(e);
+                                                }
+                                                await setDatabase(name);
+                                                // await deleteImage();
+                                                print(url);
+                                                await Timer(
+                                                    Duration(seconds: 10), () {
+                                                  print("exe");
+                                                  //getResult();
+                                                });
+                                                print("111");
+                                              }
+                                            },
+                                            child: Row(
+                                              children: const [
+                                                Icon(Icons.camera),
+                                                Text('From Camera'),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    ElevatedButton(
-                                      //if user click this button. user can upload image from camera
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                        //selectImageFromcamera(context);
-                                        getImage(ImageSource.camera);
-                                        //final newImage = File('${(await getTemporaryDirectory()).path}/your_name.jpg');
-                                        if (image != null) {
-                                          print('cam');
-                                          String name = image!.name;
-                                          String path = image!.path;
-                                          String download_url =
-                                              await uploadImage(name, path);
-
-                                          setState(() {
-                                            url = download_url;
-                                          });
-                                          try {
-                                            await deleteImage();
-                                          } catch (e) {
-                                            print(e);
-                                          }
-                                          await setDatabase(name);
-                                          // await deleteImage();
-                                          print(url);
-                                          await Timer(Duration(seconds: 10),
-                                              () {
-                                            print("exe");
-                                            //getResult();
-                                          });
-                                          print("111");
-                                        }
-                                      },
-                                      child: Row(
-                                        children: const [
-                                          Icon(Icons.camera),
-                                          Text('From Camera'),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                    },
-                    child: Text('Upload Photo'),
-                  ),
+                                  );
+                                });
+                          },
+                          child: Text('Upload Photo'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
