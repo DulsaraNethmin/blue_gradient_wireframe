@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:blue_gradient_wireframe/AllPages/fish_feeding.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -396,7 +397,10 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                           await setDatabase(name);
                                           // await deleteImage();
                                           print(url);
-                                          await getResult();
+                                          await Timer(Duration(seconds: 3),
+                                              () async {
+                                            await getResult();
+                                          });
                                         }
                                       },
                                       child: Row(
