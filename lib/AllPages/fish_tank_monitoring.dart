@@ -57,11 +57,22 @@ class _FishtankMonitoringState extends State<FishtankMonitoring> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 250,
+              ),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.red, // background
+                      onPrimary: Colors.white,
+                      minimumSize: Size(100, 50) // foreground
+                      ),
                   onPressed: () async {
-                    await _launchInBrowser("www.google.com");
+                    await _launchInBrowser("192.168.43.138");
                   },
-                  child: Text("Go")),
+                  child: Text(
+                    "Tap to View",
+                    style: TextStyle(fontSize: 20),
+                  )),
               const SizedBox(
                 height: 510.0,
               ),

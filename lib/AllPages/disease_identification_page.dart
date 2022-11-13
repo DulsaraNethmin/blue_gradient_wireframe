@@ -324,11 +324,15 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: 250,
+                    ),
                     ButtonTheme(
-                      minWidth: 400.0,
-                      height: 200.0,
+                      minWidth: 200.0,
+                      height: 250.0,
                       child: Center(
                         child: ElevatedButton(
+                          style: ButtonStyle(),
                           onPressed: () {
                             showDialog(
                                 context: context,
@@ -369,7 +373,7 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                                 // await deleteImage();
                                                 print(url);
                                                 await Timer(
-                                                    Duration(seconds: 10), () {
+                                                    Duration(seconds: 30), () {
                                                   print("exe");
                                                   getResult();
                                                 });
@@ -429,7 +433,10 @@ class _DiseaseIdentificationPageState extends State<DiseaseIdentificationPage> {
                                   );
                                 });
                           },
-                          child: Text('Upload Photo'),
+                          child: Text(
+                            'Upload Photo',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
                         ),
                       ),
                     ),
